@@ -1,0 +1,8 @@
+POST http://localhost:3000/api/user 
+Content-Type: application/json
+
+{
+    "userName": "mobin",
+    "password": "admin",
+    "email": "mobin@gmail.com"
+}

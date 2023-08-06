@@ -7,7 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
   imports: [
     UserModule,
     TaskModule,
-    MongooseModule.forRoot('mongodb://localhost:27017/userManagement'),
+    MongooseModule.forRoot('mongodb://127.0.0.1:27017/userManagement'),
   ],
   controllers: [],
   providers: [],
