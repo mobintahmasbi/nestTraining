@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { createUserDTO } from './dto/createUserDto';
 import { loginUserDTO } from './dto/loginUserDto';
@@ -13,8 +13,13 @@ export class UserController {
         return this.UserService.loginUser(loginUserdto)
     }
 
-    @Post()
+    @Post('/register')
     async createUser(@Body() createUserdto: createUserDTO) {
         return this.UserService.createUserS(createUserdto)
+    }
+
+    @Get()
+    async getcipher(@Body() cipher) {
+        return this.UserService.createhash(cipher.txt)
     }
 }
