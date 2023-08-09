@@ -5,11 +5,13 @@ import { Model } from 'mongoose';
 import { createUserDTO } from './dto/createUserDto';
 import { loginUserDTO } from './dto/loginUserDto';
 import * as bcrypt from 'bcrypt';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
+    private readonly authService: AuthService
   ) {}
 
   async createUserS(userobj: createUserDTO) {
@@ -18,23 +20,34 @@ export class UserService {
   }
 
   async loginUser(loginUserdto: loginUserDTO) {
-    const user = await this.userModel.findOne({ userName: loginUserdto.userName})
-    let validatePassword = false 
+    const user = await this.userModel.findOne({
+      userName: loginUserdto.userName,
+    });
+    let validatePassword = false;
     if (user) {
-    validatePassword = await this.comparehash(loginUserdto.password, user.password)
+      validatePassword = await this.comparehash(
+        loginUserdto.password,
+        user.password,
+      );
     }
-    return validatePassword ? user : false
+    return validatePassword
+      ? {
+          username: user.userName,
+          Email: user.email,
+          token: await this.authService.generateToken(user)
+        }
+      : false;
   }
 
-  async comparehash(password: string, hash: string){
+  async comparehash(password: string, hash: string) {
     const validation = await bcrypt.compare(password, hash);
-    return validation
+    return validation;
   }
 
   async createhash(txt: string) {
     const saltOrRounds = 10;
     const password = txt;
     const hash = await bcrypt.hash(password, saltOrRounds);
-    return hash
+    return hash;
   }
 }
